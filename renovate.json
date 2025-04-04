@@ -31,6 +31,5 @@
       "branchPrefix": "renovate/another-app-",
       "baseBranches": ["another-app"]
     }
-  ],
-  "branchPrefix": "renovate/"
+  ]
 }
