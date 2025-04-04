@@ -8,9 +8,27 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "sbstnsz/rest-json-quickstart",
-      "versioningTemplate": "semver",
-      "baseBranches": ["rest-json-quickstart"]
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["values.yaml"],
+      "matchStrings": [
+        "image: docker\\.io/another-app:(?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "another-app",
+      "versioningTemplate": "semver"
     }
   ],
-  "branchPrefix": "renovate/",
+  "packageRules": [
+    {
+      "paths": ["rest-json-quickstart/**"],
+      "baseBranches": ["rest-json-quickstart"]
+    },
+    {
+      "paths": ["another-app/**"],
+      "baseBranches": ["another-app"]
+    }
+  ],
+  "branchPrefix": "renovate/"
 }
