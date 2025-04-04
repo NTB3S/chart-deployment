@@ -8,9 +8,9 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "sbstnsz/rest-json-quickstart",
-      "versioningTemplate": "semver"
+      "versioningTemplate": "semver",
+      "baseBranches": ["rest-json-quickstart"]
     }
   ],
   "branchPrefix": "renovate/",
-  "baseBranches": ["rest-json-quickstart"]
 }
