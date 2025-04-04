@@ -22,11 +22,13 @@
   ],
   "packageRules": [
     {
-      "paths": ["rest-json-quickstart/**"],
+      "paths": ["**/values.yaml"],
+      "branchPrefix": "renovate/rest-json-quickstart-",
       "baseBranches": ["rest-json-quickstart"]
     },
     {
-      "paths": ["another-app/**"],
+      "paths": ["**/values.yaml"],
+      "branchPrefix": "renovate/another-app-",
       "baseBranches": ["another-app"]
     }
   ],
