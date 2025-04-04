@@ -20,16 +20,19 @@
       "versioningTemplate": "semver"
     }
   ],
+  "branchPrefix": "renovate/",
   "packageRules": [
     {
       "paths": ["**/values.yaml"],
-      "branchPrefix": "renovate/rest-json-quickstart-",
-      "baseBranches": ["rest-json-quickstart"]
+      "baseBranches": ["rest-json-quickstart"],
+      "managers": ["regex"],
+      "packageNames": ["sbstnsz/rest-json-quickstart"]
     },
     {
       "paths": ["**/values.yaml"],
-      "branchPrefix": "renovate/another-app-",
-      "baseBranches": ["another-app"]
+      "baseBranches": ["another-branch"],
+      "managers": ["regex"],
+      "packageNames": ["another-app"]
     }
   ]
 }
