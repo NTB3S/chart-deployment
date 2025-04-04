@@ -10,5 +10,8 @@
       "depNameTemplate": "sbstnsz/rest-json-quickstart",
       "versioningTemplate": "semver"
     }
-  ]
+  ],
+  "enabledManagers": ["regexManagers"],
+  "branchPrefix": "renovate/",
+  "baseBranches": ["rest-json-quickstart"]
 }
