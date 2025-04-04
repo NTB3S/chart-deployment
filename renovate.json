@@ -1,0 +1,14 @@
+{
+  "extends": ["config:recommended"],
+  "regexManagers": [
+    {
+      "fileMatch": ["values.yaml"],
+      "matchStrings": [
+        "image: docker\\.io/sbstnsz/rest-json-quickstart:(?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "sbstnsz/rest-json-quickstart",
+      "versioningTemplate": "semver"
+    }
+  ]
+}
