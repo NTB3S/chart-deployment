@@ -1,0 +1,5 @@
+app:
+  host: k8sbys3bstn.com
+  image: docker.io/sbstnsz/rest-json-quickstart:1.0.0-SNAPSHOT
+  ports:
+    http: 8080

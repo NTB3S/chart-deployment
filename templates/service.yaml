@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.quarkus.io/quarkus-version: 3.21.0
+    app.quarkus.io/vcs-uri: https://github.com/NTB3S/quarkus-K8s-api.git
+  labels:
+    app.kubernetes.io/name: rest-json-quickstart
+    app.kubernetes.io/managed-by: quarkus
+  name: rest-json-quickstart
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: {{ .Values.app.ports.http }}
+  selector:
+    app.kubernetes.io/name: rest-json-quickstart
+  type: ClusterIP
