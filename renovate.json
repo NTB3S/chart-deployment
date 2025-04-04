@@ -13,26 +13,13 @@
     {
       "fileMatch": ["values.yaml"],
       "matchStrings": [
-        "image: docker\\.io/another-app:(?<currentValue>.*)"
+        "image: docker\\.io/sbstnsz/rest-json-quickstart-2:(?<currentValue>.*)"
       ],
       "datasourceTemplate": "docker",
-      "depNameTemplate": "another-app",
+      "depNameTemplate": "sbstnsz/rest-json-quickstart-2",
       "versioningTemplate": "semver"
     }
   ],
   "branchPrefix": "renovate/",
-  "packageRules": [
-    {
-      "paths": ["**/values.yaml"],
-      "baseBranches": ["rest-json-quickstart"],
-      "managers": ["regex"],
-      "packageNames": ["sbstnsz/rest-json-quickstart"]
-    },
-    {
-      "paths": ["**/values.yaml"],
-      "baseBranches": ["another-branch"],
-      "managers": ["regex"],
-      "packageNames": ["another-app"]
-    }
-  ]
+  "baseBranches": ["rest-json-quickstart", "rest-json-quickstart-2"]
 }
