@@ -1,0 +1,37 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "rest-json-quickstart" branch
+  push:
+    branches: [ "rest-json-quickstart" ]
+  pull_request:
+    branches: [ "rest-json-quickstart" ]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Vérification du code source
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      # Étape 2 : Activer le support OCI dans Helm
+      - name: Enable Helm OCI support
+        run: echo "export HELM_EXPERIMENTAL_OCI=1" >> $GITHUB_ENV
+
+      # Étape 3 : Connecter Helm au registre GitHub Container Registry
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
+
+      # Étape 4 : Packager le chart Helm
+      - name: Package Helm Chart
+        run: |
+          helm chart save charts/my-chart ghcr.io/${{ github.repository_owner }}/my-chart:1.0.0
+
+      # Étape 5 : Pusher le chart Helm dans GitHub Packages
+      - name: Push Helm Chart to GitHub Packages
+        run: |
+          helm chart push ghcr.io/${{ github.repository_owner }}/my-chart:1.0.0
