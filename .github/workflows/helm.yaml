@@ -2,8 +2,13 @@ name: Publish Helm Chart
 
 on:
   push:
-    branches: [ "rest-json-quickstart" ]
-    # Optionally add path filters if your chart is in a specific directory
+    branches: [ main, rest-json-quickstart ]
+    # Monitor changes to any chart files at the root level
+    paths:
+      - 'Chart.yaml'
+      - 'values.yaml'
+      - 'templates/**'
+      - '.helmignore'
   # Allow manual triggering
   workflow_dispatch:
 
@@ -34,7 +39,7 @@ jobs:
       - name: Package and Push Helm Chart
         run: |
           # Set variables
-          CHART_DIR="./charts/my-chart"  # Update with your chart directory path
+          CHART_DIR="."  # Chart is at root level
           CHART_NAME=$(yq e '.name' $CHART_DIR/Chart.yaml)
           CHART_VERSION=$(yq e '.version' $CHART_DIR/Chart.yaml)
           REGISTRY="ghcr.io/${{ github.repository_owner }}"
