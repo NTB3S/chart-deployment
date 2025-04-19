@@ -36,18 +36,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Package and Push Helm Chart
+      - name: Save and Push Helm Chart
         run: |
-          # Set variables
-          CHART_DIR="."  # Chart is at root level
-          CHART_NAME=$(yq e '.name' $CHART_DIR/Chart.yaml)
-          CHART_VERSION=$(yq e '.version' $CHART_DIR/Chart.yaml)
-          REGISTRY="ghcr.io/${{ github.repository }}"
-          
-          echo "Publishing $CHART_NAME chart version $CHART_VERSION to $REGISTRY"
-          
-          # Package the chart locally
-          helm package $CHART_DIR
-          
-          # Push the chart to GitHub Packages
-          helm push ${CHART_NAME}-${CHART_VERSION}.tgz oci://$REGISTRY/helm-charts
+          CHART_PATH=charts/mychart  # Adjust to your chart folder
+          CHART_NAME=$(helm show chart $CHART_PATH | grep '^name:' | awk '{print $2}')
+          CHART_VERSION=$(helm show chart $CHART_PATH | grep '^version:' | awk '{print $2}')
+          OCI_REF=ghcr.io/${{ github.repository }}/$CHART_NAME:$CHART_VERSION
+
+          # Save the chart as an OCI artifact
+          helm package $CHART_PATH
+          helm push $CHART_NAME-$CHART_VERSION.tgz oci://ghcr.io/${{ github.repository }}
