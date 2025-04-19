@@ -1,40 +1,48 @@
-name: Publish Helm Chart to GitHub Container Registry (GHCR)
+name: Publish Helm Chart
 
 on:
   push:
-    branches:
-      - rest-json-quickstart
-    paths:
-      - '**'  # (Optional) You can restrict this if needed
+    branches: [ "rest-json-quickstart" ]
+    # Optionally add path filters if your chart is in a specific directory
+  # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
-  publish-chart:
+  publish:
     runs-on: ubuntu-latest
-
+    
     permissions:
       contents: read
       packages: write
-
+      
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - name: Checkout
+        uses: actions/checkout@v3
+        
       - name: Set up Helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.14.0
-
-      - name: Login to GitHub Container Registry
+          version: 'latest'
+      
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Package and Push Helm Chart
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Save and Push Helm Chart as OCI
-        run: |
-          CHART_DIR=.
-          CHART_NAME=$(helm show chart $CHART_DIR | grep '^name:' | awk '{print $2}')
-          CHART_VERSION=$(helm show chart $CHART_DIR | grep '^version:' | awk '{print $2}')
-          OCI_REPO=ghcr.io/${{ github.repository }}/$CHART_NAME
-
-          # Save and Push
-          helm package $CHART_DIR $OCI_REPO:$CHART_VERSION
-          helm push $OCI_REPO:$CHART_VERSION
+          # Set variables
+          CHART_DIR="./charts/my-chart"  # Update with your chart directory path
+          CHART_NAME=$(yq e '.name' $CHART_DIR/Chart.yaml)
+          CHART_VERSION=$(yq e '.version' $CHART_DIR/Chart.yaml)
+          REGISTRY="ghcr.io/${{ github.repository_owner }}"
+          
+          echo "Publishing $CHART_NAME chart version $CHART_VERSION to $REGISTRY"
+          
+          # Package the chart locally
+          helm package $CHART_DIR
+          
+          # Push the chart to GitHub Packages
+          helm push ${CHART_NAME}-${CHART_VERSION}.tgz oci://$REGISTRY/helm-charts
