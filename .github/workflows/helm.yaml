@@ -1,21 +1,22 @@
-name: Publish Helm Chart to GHCR
+name: Publish Helm Chart to GitHub Container Registry (GHCR)
 
 on:
   push:
     branches:
       - rest-json-quickstart
-  workflow_dispatch: 
+    paths:
+      - '**'  # (Optional) You can restrict this if needed
 
 jobs:
-  publish:
+  publish-chart:
     runs-on: ubuntu-latest
 
     permissions:
-      packages: write
       contents: read
+      packages: write
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Helm
@@ -25,15 +26,15 @@ jobs:
 
       - name: Login to GitHub Container Registry
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Save and Push Helm Chart
+      - name: Save and Push Helm Chart as OCI
         run: |
-          CHART_PATH=charts/mychart  # Adjust to your chart folder
-          CHART_NAME=$(helm show chart $CHART_PATH | grep '^name:' | awk '{print $2}')
-          CHART_VERSION=$(helm show chart $CHART_PATH | grep '^version:' | awk '{print $2}')
-          OCI_REF=ghcr.io/${{ github.repository }}/$CHART_NAME:$CHART_VERSION
+          CHART_DIR=.
+          CHART_NAME=$(helm show chart $CHART_DIR | grep '^name:' | awk '{print $2}')
+          CHART_VERSION=$(helm show chart $CHART_DIR | grep '^version:' | awk '{print $2}')
+          OCI_REPO=ghcr.io/${{ github.repository }}/$CHART_NAME
 
-          # Save the chart as an OCI artifact
-          helm package $CHART_PATH
-          helm push $CHART_NAME-$CHART_VERSION.tgz oci://ghcr.io/${{ github.repository }}
+          # Save and Push
+          helm chart save $CHART_DIR $OCI_REPO:$CHART_VERSION
+          helm chart push $OCI_REPO:$CHART_VERSION
