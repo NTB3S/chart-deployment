@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - rest-json-quickstart
+  workflow_dispatch: 
 
 jobs:
   publish:
