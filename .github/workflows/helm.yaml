@@ -1,0 +1,38 @@
+name: Publish Helm Chart to GHCR
+
+on:
+  push:
+    branches:
+      - rest-json-quickstart
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.14.0
+
+      - name: Login to GitHub Container Registry
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Save and Push Helm Chart
+        run: |
+          CHART_PATH=charts/mychart  # Adjust to your chart folder
+          CHART_NAME=$(helm show chart $CHART_PATH | grep '^name:' | awk '{print $2}')
+          CHART_VERSION=$(helm show chart $CHART_PATH | grep '^version:' | awk '{print $2}')
+          OCI_REF=ghcr.io/${{ github.repository }}/$CHART_NAME:$CHART_VERSION
+
+          # Save the chart as an OCI artifact
+          helm package $CHART_PATH
+          helm push $CHART_NAME-$CHART_VERSION.tgz oci://ghcr.io/${{ github.repository }}
