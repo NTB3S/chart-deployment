@@ -38,7 +38,7 @@ jobs:
       
       - name: Save and Push Helm Chart
         run: |
-          CHART_PATH=charts/mychart  # Adjust to your chart folder
+          CHART_PATH=. # Adjust to your chart folder
           CHART_NAME=$(helm show chart $CHART_PATH | grep '^name:' | awk '{print $2}')
           CHART_VERSION=$(helm show chart $CHART_PATH | grep '^version:' | awk '{print $2}')
           OCI_REF=ghcr.io/${{ github.repository }}/$CHART_NAME:$CHART_VERSION
