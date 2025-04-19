@@ -2,7 +2,7 @@ name: Publish Helm Chart
 
 on:
   push:
-    branches: [ main, rest-json-quickstart ]
+    branches: [ "main", "rest-json-quickstart" ]
     # Monitor changes to any chart files at the root level
     paths:
       - 'Chart.yaml'
