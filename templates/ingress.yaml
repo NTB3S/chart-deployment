@@ -1,8 +1,14 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
+    app.quarkus.io/quarkus-version: 3.21.0
+    app.quarkus.io/vcs-uri: https://github.com/NTB3S/quarkus-K8s-api.git
     nginx.org/mergeable-ingress-type: minion
+  labels:
+    app.kubernetes.io/name: rest-json-quickstart
+    app.kubernetes.io/managed-by: quarkus
   name: rest-json-quickstart
 spec:
   ingressClassName: nginx
